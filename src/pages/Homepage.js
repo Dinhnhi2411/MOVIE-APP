@@ -4,6 +4,7 @@ import { API_KEY } from "../api/config";
 import Grid from "@mui/material/Grid";
 import TrendMovie from "../components/TrendMovie";
 import Category from "../components/Category";
+// import FeaturedMovie from "../components/FeaturedMovie";
 
 function HomePage() {
   const [loadingTrending, setLoadingTrending] = useState();
@@ -47,6 +48,7 @@ function HomePage() {
 
         <Grid item direction="column" mt={5} container>
           <Category />
+          {/* <FeaturedMovie/> */}
         </Grid>
       </Grid>
     </>

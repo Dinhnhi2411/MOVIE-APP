@@ -24,6 +24,7 @@ function DiscoveryPage() {
           `discover/movie?api_key=${API_KEY}&page=${pageId}&language=en-US`
         );
         setMovieList(res.data.results);
+        // console.log(movieList)
         setLoading(false);
       } catch (e) {
         console.log(e.message);

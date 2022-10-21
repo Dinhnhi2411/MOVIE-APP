@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import apiService from "../api/apiService";
-import { API_KEY } from "../api/config";
-import  FTextField from "./form/FTextField";
-import InputAdornment  from "@mui/material/InputAdornment";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import { useSearchParams} from 'react-router-dom';
 import Box from '@mui/material/Box';
+import apiService from "../api/apiService";
+import { API_KEY } from "../api/config";
+import { Button } from "@mui/material";
+
+
 
 
 const Search = styled("div")(({ theme }) => ({
@@ -40,7 +40,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
+   
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -51,47 +51,61 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-
-
 function SearchAppBar() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const q = searchParams.get("q");
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-        
-  //       const res = await apiService.get(
-  //         `genre/movie/q?api_key=${API_KEY}&language=en-US`
-         
-  //       );
-  //       console.log("data", res)
-        
-  //     } catch (e) {
-  //       console.log(e.message);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-  const handleSubmit =(e)=>{
-    e.preventDefault();
-    let formData = new FormData(e.currentTarget);
-    let q = formData.get("q");
-    setSearchParams({q: q});
-  };
+  const [loading, setLoading] = useState();
+  const [searchMovie, setSearchMovie] = useState();
+  const [searchInput, setSearchInput] = useState("")
+  const [movied, setMovied] = useState([])
+
+  React.useEffect(()=> {
   
+    const fetchData = async() =>{
+      try{
+        setLoading(true)
+        const res = await apiService.get(`search/movie?api_key=${API_KEY}&query=${searchMovie}&page=1`);
+        setMovied(res.data.results)
+        
+        setLoading(false);
+      } catch (e) {
+        console.log(e.message)
+      }
+    }
+    fetchData();
+    
+  },[searchMovie])
+
+  const handleSubmit =(e) =>{
+    e.preventDefault();
+    setSearchMovie(searchInput);
+  }
+ 
+
   return (
-    <Box component="form" onSubmit={handleSubmit}>  
+    <Box display="flex" flexDirection="row">
+   
     <Search>
     <SearchIconWrapper>
-      <SearchIcon />
+     
     </SearchIconWrapper>
     <StyledInputBase
-      name="q"
+    
+      value={searchInput}
+      onChange={(e)=> setSearchInput(e.target.value)}
       placeholder="Search…"
       inputProps={{ "aria-label": "search" }}
+      
     />
   </Search>
+  <Button onClick={handleSubmit} color="inherit">
+    Search
+    </Button>
+  
+
   </Box>
-    );
-  }
+  )
+
+
+  
+
+}
 export default SearchAppBar;

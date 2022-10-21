@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import apiService from "../api/apiService";
 import { API_KEY } from "../api/config";
-import Carousel from "react-material-ui-carousel";
+// import Carousel from "react-material-ui-carousel";
 import Paper from "@mui/material/Paper";
 import { Box, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -14,9 +14,11 @@ import RecommendIcon from "@mui/icons-material/Recommend";
 export default function FeaturedMovie(props) {
   const [cutInitial, setcutInitial] = useState([]);
   const [loading, setLoading] = useState();
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("props", props)
         setLoading(true);
         const res = await apiService.get(
           `/trending/all/day?api_key=${API_KEY}`
@@ -38,11 +40,11 @@ export default function FeaturedMovie(props) {
     </Stack>
   );
   return (
-    <Carousel>
+    <Box>
       {loading
         ? cutInitial.map((item, i) => detailSkeleton)
         : cutInitial.map((item, i) => <Item key={i} item={item} />)}
-    </Carousel>
+    </Box>
   );
 }
 
