@@ -10,7 +10,7 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import { Link, useParams } from "react-router-dom";
 import Skeleton from "@mui/material/Skeleton";
-//APIKEY TRONG ENV
+
 function DiscoveryPage() {
   const [loading, setLoading] = useState();
   const [movieList, setMovieList] = useState([]);

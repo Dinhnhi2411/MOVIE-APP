@@ -3,9 +3,12 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import Box from '@mui/material/Box';
-import apiService from "../api/apiService";
-import { API_KEY } from "../api/config";
+
 import { Button } from "@mui/material";
+
+import { Link } from "react-router-dom";
+
+import {ExampleContext} from '../layouts/MainLayout'
 
 
 
@@ -26,15 +29,7 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -52,41 +47,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 function SearchAppBar() {
-  const [loading, setLoading] = useState();
-  const [searchMovie, setSearchMovie] = useState();
-  const [searchInput, setSearchInput] = useState("")
-  const [movied, setMovied] = useState([])
-
-  React.useEffect(()=> {
-  
-    const fetchData = async() =>{
-      try{
-        setLoading(true)
-        const res = await apiService.get(`search/movie?api_key=${API_KEY}&query=${searchMovie}&page=1`);
-        setMovied(res.data.results)
-        
-        setLoading(false);
-      } catch (e) {
-        console.log(e.message)
-      }
-    }
-    fetchData();
-    
-  },[searchMovie])
+  const {setSearchMovie} = React.useContext(ExampleContext)
+  const {searchInput} = React.useContext(ExampleContext)
+  const {setSearchInput} =  React.useContext(ExampleContext)
 
   const handleSubmit =(e) =>{
     e.preventDefault();
     setSearchMovie(searchInput);
   }
- 
 
   return (
+    <>
     <Box display="flex" flexDirection="row">
    
     <Search>
-    <SearchIconWrapper>
-     
-    </SearchIconWrapper>
     <StyledInputBase
     
       value={searchInput}
@@ -95,17 +69,23 @@ function SearchAppBar() {
       inputProps={{ "aria-label": "search" }}
       
     />
-  </Search>
-  <Button onClick={handleSubmit} color="inherit">
-    Search
+    </Search>
+    <Button component={Link} to="/search"
+    onClick={handleSubmit} 
+    color="inherit"
+    disableRipple={true}
+    childen={<SearchIcon/>}
+    >
+      Search
     </Button>
   
 
   </Box>
+
+
+
+</>
+
   )
-
-
-  
-
 }
 export default SearchAppBar;

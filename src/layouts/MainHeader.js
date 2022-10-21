@@ -161,7 +161,9 @@ export default function PrimarySearchAppBar() {
             to="/"
             children={<NightShelterIcon />}
           />
-          <SearchAppBar/>
+          <SearchAppBar
+         
+          />
           <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{
