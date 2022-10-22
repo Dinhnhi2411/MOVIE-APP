@@ -7,8 +7,9 @@ import Box from '@mui/material/Box';
 import { Button } from "@mui/material";
 
 import { Link } from "react-router-dom";
-
-import {ExampleContext} from '../layouts/MainLayout'
+import apiService from "../api/apiService";
+import { API_KEY } from "../api/config";
+// import {ExampleContext} from '../layouts/MainLayout'
 
 
 
@@ -45,19 +46,52 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
+export const ExampleContext = React.createContext();
 function SearchAppBar() {
-  const {setSearchMovie} = React.useContext(ExampleContext)
-  const {searchInput} = React.useContext(ExampleContext)
-  const {setSearchInput} =  React.useContext(ExampleContext)
+  // const {setSearchMovie} = React.useContext(ExampleContext)
+  // const {searchInput} = React.useContext(ExampleContext)
+  // const {setSearchInput} =  React.useContext(ExampleContext)
+  const [loading, setLoading] = useState();
+  const [searchMovie, setSearchMovie] = useState();
+  const [searchInput, setSearchInput] = useState("")
+  const [movied, setMovied] = useState([])
+  // const store ={
+  //     loading: [loading, setLoading],
+  //     searchMovie: [searchMovie, setSearchMovie],
+  //     searchInput: [searchInput, setSearchInput],
+  //     movied : [movied, setMovied]
+  
 
-  const handleSubmit =(e) =>{
-    e.preventDefault();
-    setSearchMovie(searchInput);
-  }
+      React.useEffect(()=> {
+      
+        const fetchData = async() =>{
+       
+          try{
+            setLoading(true)
+            if(searchMovie){
+            const res = await apiService.get(`search/movie?api_key=${API_KEY}&query=${searchMovie}&page=1`);
+            setMovied(res.data.results)
+            
+            setLoading(false);
+            }
+          } catch (e) {
+            console.log(e.message)
+          }
+          
+        }
+        fetchData();
+      
+      },[searchMovie])
+
+      const handleSubmit =(e) =>{
+        e.preventDefault();
+        setSearchMovie(searchInput);
+      }
 
   return (
+
     <>
+    <ExampleContext.Provider value={movied}>
     <Box display="flex" flexDirection="row">
    
     <Search>
@@ -78,12 +112,8 @@ function SearchAppBar() {
     >
       Search
     </Button>
-  
-
   </Box>
-
-
-
+  </ExampleContext.Provider>
 </>
 
   )
